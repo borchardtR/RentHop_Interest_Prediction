@@ -1,0 +1,17 @@
+# RentHop Interest Level Prediction
+
+[RentHop](https://www.renthop.com/) is an apartment rental listing website. This was originally a Kaggle competition where the goal was to predict the "interest level" of apartment listings. The [data](https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries/data) (\~170 MB) consisted of \~125,000 apartment listings based primarily in the New York, New York area. The data was split into training data (\~50,000 apartment listings, \~70 MB) and test data (\~75,000 apartment listings, \~100 MB). 
+
+Each listing potentially had data for the number of bedrooms, bathrooms, the monthly rental price, the listed desciption in the listing, the display address, the tagged features, the latitude/longitude coordinates, photos and more. The training data included the "interest level" which could be "low", "medium" or "high". This corresponds to the number of inquiries a particular apartment listing received. The particular conversion between the number of inquiries to the interest level categorical feature was not provided.
+
+The [first](https://github.com/borchardtR/Projects/blob/master/RentHop_Interest/RentHop_Interest_Part1_LM.ipynb) part of the project consisted of feature exploration and feature engineering. Some of the engineered features include:
+* Natural language processing of apartment listing description and tags to identify trends and patterns between the interest level and the presence or absence of particular keywords
+* Geospatial analysis that included building a borough classification tool to use as a predictor for the interest level
+* Time analysis that included classifying the listing posting data into (part of day: morning, afternoon, evening, night), day of the week and month of the year) to use as predictor for interest level
+
+
+The [second](https://github.com/borchardtR/Projects/blob/master/RentHop_Interest/RentHop_Interest_Part2_LM.ipynb) part of the project consisted of the muliti-class classification of the interest level of the apartment listings using the cleaned and engineered features from part 1. More specifically, the prediction consisted of a set of probabilities that a particular listing would have a low, medium or high interest level.  The test dataset was evaluated using the multi-class logarithmic loss on that set of probabilities. I investigated and built my own multi-class logarithmic loss scoring function to better my intuition on what this metric was measuring. I also implemented a "dumb" baseline classifier (where the set of probabilities for every listing corresponded to the overall proportion of apartment listings with low, medium and high interest levels) to use as a baseline to compare the performance of my models to. 
+
+I utilized linear models (simple logistic regression as well as logistic regression with L1 regularization, L2 regularization and ElasticNet regularization), tree-based models (simple decision tree, random forest, AdaBoost, Gradient Boosting and XGBoost classification), a nearest neighbors model, and stacking algorithms (voting classifer by weights). 
+
+The best performing model was a voting classifier algorithm that employed XGBoost and Gradient Boosting to achieve a mulitclass log loss of 0.64 (the "dumb" baseline classifer had a multiclass log loss of 0.79 and the winner of the Kaggle competition had a mulitclass log loss of 0.49).
